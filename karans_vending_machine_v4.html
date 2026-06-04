@@ -1,0 +1,525 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+
+.scene{
+  width:100%;
+  height:700px;
+  background:linear-gradient(180deg,#0a0a0a 0%,#111 100%);
+  border-radius:16px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ── MACHINE ── */
+.vm-wrap{
+  position:relative;
+  width:260px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.machine{
+  width:260px;
+  background:linear-gradient(170deg,#2c2c2c 0%,#1a1a1a 50%,#222 100%);
+  border-radius:14px 14px 6px 6px;
+  border:1.5px solid #333;
+  overflow:hidden;
+  position:relative;
+}
+
+.ledge-l,.ledge-r{
+  position:absolute;top:0;bottom:0;width:8px;z-index:2;
+}
+.ledge-l{left:0;background:linear-gradient(90deg,#3a3a3a,#252525);}
+.ledge-r{right:0;background:linear-gradient(90deg,#252525,#1a1a1a);}
+
+.inner{margin:0 8px;}
+
+.stripe{
+  height:5px;
+  background:repeating-linear-gradient(90deg,#cc0000 0,#cc0000 18px,#ccc 18px,#ccc 22px);
+}
+
+.hdr{
+  background:#111;
+  padding:11px 14px 9px;
+  border-bottom:1px solid #000;
+  text-align:center;
+}
+.hdr-welcome{font-family:'Bebas Neue',sans-serif;font-size:11px;color:#666;letter-spacing:5px;}
+.hdr-name{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#f0f0f0;letter-spacing:6px;line-height:1;margin:2px 0;}
+.hdr-sub{font-family:'Inter',sans-serif;font-size:8px;color:#c8102e;letter-spacing:3px;text-transform:uppercase;font-weight:600;}
+
+.tagstrip{
+  background:#c8102e;
+  padding:4px 10px;
+  text-align:center;
+}
+.tagstrip span{font-family:'Inter',sans-serif;font-size:7.5px;color:rgba(255,255,255,0.9);letter-spacing:3px;text-transform:uppercase;font-weight:600;}
+
+.lcd-wrap{background:#0d0d0d;padding:6px 10px;border-bottom:1px solid #000;}
+.lcd{
+  background:#071207;border:1px solid #0d2a0d;border-radius:3px;
+  padding:5px 8px;font-family:'Inter',sans-serif;font-size:10px;font-weight:500;
+  color:#39e05a;letter-spacing:2px;text-transform:uppercase;text-align:center;
+  min-height:24px;display:flex;align-items:center;justify-content:center;
+}
+
+.glass-frame{background:#080808;padding:7px 9px;border-bottom:1px solid #000;}
+.glass-bezel{background:#0d0d0d;border:1.5px solid #1c1c1c;border-radius:4px;padding:7px 7px 5px;position:relative;overflow:hidden;}
+.glass-sheen{position:absolute;top:0;left:0;width:28%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0.025),transparent);pointer-events:none;z-index:3;}
+
+.shelf{display:flex;gap:5px;margin-bottom:3px;}
+.slot{flex:1;height:54px;background:#080808;border-radius:3px;border:1px solid #181818;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.shelf-sep{height:2px;background:#151515;border-top:1px solid #202020;margin:0 0 3px;}
+.dbag{transition:transform 0.2s;}
+.slot.shake .dbag{animation:bagShake 0.55s ease-in-out;}
+@keyframes bagShake{0%,100%{transform:translateX(0) rotate(0)}18%{transform:translateX(-4px) rotate(-5deg)}36%{transform:translateX(4px) rotate(4deg)}54%{transform:translateX(-3px) rotate(-3deg)}72%{transform:translateX(2px) rotate(2deg)}}
+
+.ctrl{background:#0d0d0d;border-bottom:1px solid #000;padding:7px 10px;display:flex;gap:7px;align-items:center;}
+.coin-col{flex:1;}
+.coin-lbl{font-family:'Inter',sans-serif;font-size:7px;color:#444;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.coin-track{background:#050505;border:1px solid #181818;border-radius:2px;height:7px;overflow:hidden;position:relative;}
+.coin-zip{position:absolute;top:0;left:0;height:100%;width:25%;background:#d4a020;transform:translateX(-200%);}
+.coin-zip.go{animation:zipThru 0.4s ease-out forwards;}
+@keyframes zipThru{0%{transform:translateX(-200%);opacity:1}100%{transform:translateX(500%);opacity:0}}
+.coin-count{font-family:'Inter',sans-serif;font-size:7.5px;color:#3a3a3a;margin-top:3px;letter-spacing:1px;}
+
+.ibtn{
+  background:linear-gradient(180deg,#e0b030,#b08010);
+  border:none;border-bottom:3px solid #7a5808;border-radius:6px;
+  padding:0 12px;height:52px;color:#1a0e00;
+  font-family:'Inter',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  transition:transform 0.1s,border-bottom 0.1s;flex-shrink:0;
+}
+.ibtn:active{transform:translateY(2px);border-bottom:1px solid #7a5808;}
+.ibtn:disabled{opacity:0.4;cursor:not-allowed;}
+.ibtn-coin{font-size:16px;line-height:1;}
+
+.tray-zone{background:#0d0d0d;padding:5px 10px 8px;}
+.tray{background:#060606;border:1px solid #181818;border-bottom:3px solid #000;border-radius:4px;height:40px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.tray-hint{font-family:'Inter',sans-serif;font-size:7.5px;color:#222;letter-spacing:2px;text-transform:uppercase;transition:opacity 0.3s;}
+
+.drop-bag{position:absolute;top:-70px;transition:top 0.65s cubic-bezier(0.22,1.4,0.6,1),opacity 0.2s;opacity:0;}
+.drop-bag.fall{top:2px;opacity:1;}
+
+.feet{display:flex;justify-content:space-between;padding:0 22px;}
+.foot{width:28px;height:9px;background:#0d0d0d;border:1px solid #000;border-top:none;border-radius:0 0 4px 4px;}
+.vm-shadow{width:220px;height:10px;background:radial-gradient(ellipse,rgba(0,0,0,0.7) 0%,transparent 70%);margin:0 auto;}
+
+/* ── OVERLAY (covers whole scene) ── */
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  pointer-events:none;
+  z-index:20;
+  transition:background 0.4s;
+  padding:16px;
+}
+.overlay.active{
+  background:rgba(0,0,0,0.78);
+  pointer-events:all;
+}
+
+/* big bag in overlay */
+.ov-bag{
+  opacity:0;
+  transform:translateY(30px) scale(0.85);
+  transition:opacity 0.45s ease, transform 0.45s cubic-bezier(0.34,1.3,0.64,1);
+  cursor:pointer;
+  position:relative;
+}
+.ov-bag.show{opacity:1;transform:translateY(0) scale(1);}
+.ov-bag:hover svg{filter:brightness(1.1);}
+
+.ov-tear-hint{
+  font-family:'Inter',sans-serif;font-size:9px;color:#777;
+  letter-spacing:3px;text-transform:uppercase;
+  opacity:0;transition:opacity 0.4s 0.2s;
+}
+.ov-bag.show ~ .ov-tear-hint{opacity:1;}
+
+/* tear animation */
+.ov-bag.tearing svg{animation:tearWiggle 0.35s ease-in-out;}
+@keyframes tearWiggle{
+  0%{transform:rotate(0) scale(1)}
+  20%{transform:rotate(-4deg) scale(1.03)}
+  45%{transform:rotate(5deg) scale(1.04)}
+  70%{transform:rotate(-3deg) scale(1.02)}
+  100%{transform:rotate(0) scale(1)}
+}
+
+/* note card */
+.note-card{
+  background:#fffef7;
+  border:1px solid #e0d4b0;
+  border-radius:10px;
+  width:260px;
+  padding:18px 20px 14px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(20px) scale(0.9);
+  transition:opacity 0.45s ease, transform 0.45s cubic-bezier(0.34,1.3,0.64,1);
+}
+.note-card.show{opacity:1;transform:translateY(0) scale(1);}
+.note-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:repeating-linear-gradient(90deg,#cc0000 0,#cc0000 9px,#ff6500 9px,#ff6500 18px,#ffb200 18px,#ffb200 27px);
+}
+.note-eyebrow{font-family:'Inter',sans-serif;font-size:8px;color:#c0a060;letter-spacing:3px;text-transform:uppercase;margin:6px 0 10px;}
+.note-msg{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#1a1208;line-height:1.75;white-space:pre-line;margin-bottom:10px;}
+.note-from{font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:#c0a060;}
+
+.again-btn{
+  opacity:0;transform:translateY(10px);
+  transition:opacity 0.3s 0.15s, transform 0.3s 0.15s;
+  background:none;border:1px solid #444;border-radius:6px;
+  padding:8px 18px;font-family:'Inter',sans-serif;font-size:9px;
+  letter-spacing:2.5px;text-transform:uppercase;color:#666;cursor:pointer;
+  transition:border-color 0.15s,color 0.15s,opacity 0.3s 0.15s,transform 0.3s 0.15s;
+}
+.again-btn.show{opacity:1;transform:translateY(0);}
+.again-btn:hover{border-color:#d4a020;color:#d4a020;}
+
+/* particle burst */
+.particle{
+  position:absolute;
+  width:6px;height:6px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:30;
+  animation:particleFly 0.7s ease-out forwards;
+}
+@keyframes particleFly{
+  0%{opacity:1;transform:translate(0,0) scale(1);}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}
+}
+</style>
+
+<div class="scene" id="scene">
+
+  <!-- MACHINE -->
+  <div class="vm-wrap">
+    <div class="machine">
+      <div class="ledge-l"></div><div class="ledge-r"></div>
+      <div class="inner">
+        <div class="stripe"></div>
+        <div class="hdr">
+          <div class="hdr-welcome">welcome to</div>
+          <div class="hdr-name">KARAN'S</div>
+          <div class="hdr-sub">Special Vending Machine</div>
+        </div>
+        <div class="tagstrip"><span>vending machine for the hottest snack in town</span></div>
+        <div class="lcd-wrap"><div class="lcd" id="lcd">Enjoy a bite of love ♥</div></div>
+        <div class="glass-frame">
+          <div class="glass-bezel">
+            <div class="glass-sheen"></div>
+            <div class="shelf">
+              <div class="slot" id="s0"><div class="dbag"><svg width="28" height="42" viewBox="0 0 28 42" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="a0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8080a"/><stop offset="100%" stop-color="#7a0000"/></linearGradient></defs><rect x="1" y="2" width="26" height="38" rx="3" fill="url(#a0)"/><rect x="1" y="2" width="26" height="9" rx="3" fill="#5a0000"/><rect x="1" y="31" width="26" height="9" rx="3" fill="#5a0000"/><polygon points="4,12 24,12 20,31 8,31" fill="#ff6500"/><polygon points="6,14 22,14 19,29 9,29" fill="#ffb200" opacity="0.8"/><text x="14" y="24" font-family="'Bebas Neue','Impact',sans-serif" font-size="7" fill="white" text-anchor="middle" letter-spacing="1" font-weight="900">DORITOS</text><text x="14" y="30" font-family="'Inter',sans-serif" font-size="3.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">NACHO CHEESE</text></svg></div></div>
+              <div class="slot" id="s1"><div class="dbag"><svg width="28" height="42" viewBox="0 0 28 42" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="a1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8080a"/><stop offset="100%" stop-color="#7a0000"/></linearGradient></defs><rect x="1" y="2" width="26" height="38" rx="3" fill="url(#a1)"/><rect x="1" y="2" width="26" height="9" rx="3" fill="#5a0000"/><rect x="1" y="31" width="26" height="9" rx="3" fill="#5a0000"/><polygon points="4,12 24,12 20,31 8,31" fill="#ff6500"/><polygon points="6,14 22,14 19,29 9,29" fill="#ffb200" opacity="0.8"/><text x="14" y="24" font-family="'Bebas Neue','Impact',sans-serif" font-size="7" fill="white" text-anchor="middle" letter-spacing="1" font-weight="900">DORITOS</text><text x="14" y="30" font-family="'Inter',sans-serif" font-size="3.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">NACHO CHEESE</text></svg></div></div>
+              <div class="slot" id="s2"><div class="dbag"><svg width="28" height="42" viewBox="0 0 28 42" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="a2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8080a"/><stop offset="100%" stop-color="#7a0000"/></linearGradient></defs><rect x="1" y="2" width="26" height="38" rx="3" fill="url(#a2)"/><rect x="1" y="2" width="26" height="9" rx="3" fill="#5a0000"/><rect x="1" y="31" width="26" height="9" rx="3" fill="#5a0000"/><polygon points="4,12 24,12 20,31 8,31" fill="#ff6500"/><polygon points="6,14 22,14 19,29 9,29" fill="#ffb200" opacity="0.8"/><text x="14" y="24" font-family="'Bebas Neue','Impact',sans-serif" font-size="7" fill="white" text-anchor="middle" letter-spacing="1" font-weight="900">DORITOS</text><text x="14" y="30" font-family="'Inter',sans-serif" font-size="3.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">NACHO CHEESE</text></svg></div></div>
+            </div>
+            <div class="shelf-sep"></div>
+            <div class="shelf">
+              <div class="slot" id="s3"><div class="dbag"><svg width="28" height="42" viewBox="0 0 28 42" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="a3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8080a"/><stop offset="100%" stop-color="#7a0000"/></linearGradient></defs><rect x="1" y="2" width="26" height="38" rx="3" fill="url(#a3)"/><rect x="1" y="2" width="26" height="9" rx="3" fill="#5a0000"/><rect x="1" y="31" width="26" height="9" rx="3" fill="#5a0000"/><polygon points="4,12 24,12 20,31 8,31" fill="#ff6500"/><polygon points="6,14 22,14 19,29 9,29" fill="#ffb200" opacity="0.8"/><text x="14" y="24" font-family="'Bebas Neue','Impact',sans-serif" font-size="7" fill="white" text-anchor="middle" letter-spacing="1" font-weight="900">DORITOS</text><text x="14" y="30" font-family="'Inter',sans-serif" font-size="3.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">NACHO CHEESE</text></svg></div></div>
+              <div class="slot" id="s4"><div class="dbag"><svg width="28" height="42" viewBox="0 0 28 42" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="a4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8080a"/><stop offset="100%" stop-color="#7a0000"/></linearGradient></defs><rect x="1" y="2" width="26" height="38" rx="3" fill="url(#a4)"/><rect x="1" y="2" width="26" height="9" rx="3" fill="#5a0000"/><rect x="1" y="31" width="26" height="9" rx="3" fill="#5a0000"/><polygon points="4,12 24,12 20,31 8,31" fill="#ff6500"/><polygon points="6,14 22,14 19,29 9,29" fill="#ffb200" opacity="0.8"/><text x="14" y="24" font-family="'Bebas Neue','Impact',sans-serif" font-size="7" fill="white" text-anchor="middle" letter-spacing="1" font-weight="900">DORITOS</text><text x="14" y="30" font-family="'Inter',sans-serif" font-size="3.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">NACHO CHEESE</text></svg></div></div>
+              <div class="slot" id="s5"><div class="dbag"><svg width="28" height="42" viewBox="0 0 28 42" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="a5" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8080a"/><stop offset="100%" stop-color="#7a0000"/></linearGradient></defs><rect x="1" y="2" width="26" height="38" rx="3" fill="url(#a5)"/><rect x="1" y="2" width="26" height="9" rx="3" fill="#5a0000"/><rect x="1" y="31" width="26" height="9" rx="3" fill="#5a0000"/><polygon points="4,12 24,12 20,31 8,31" fill="#ff6500"/><polygon points="6,14 22,14 19,29 9,29" fill="#ffb200" opacity="0.8"/><text x="14" y="24" font-family="'Bebas Neue','Impact',sans-serif" font-size="7" fill="white" text-anchor="middle" letter-spacing="1" font-weight="900">DORITOS</text><text x="14" y="30" font-family="'Inter',sans-serif" font-size="3.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">NACHO CHEESE</text></svg></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="ctrl">
+          <div class="coin-col">
+            <div class="coin-lbl">Coin insert</div>
+            <div class="coin-track"><div class="coin-zip" id="cz"></div></div>
+            <div class="coin-count" id="cc">0 coins used</div>
+          </div>
+          <button class="ibtn" id="ibtn" onclick="insertCoin()">
+            <span class="ibtn-coin">🪙</span>
+            <span>INSERT</span>
+          </button>
+        </div>
+        <div class="tray-zone">
+          <div class="tray">
+            <span class="tray-hint" id="trayHint">— tray —</span>
+            <div class="drop-bag" id="dropBag">
+              <svg width="28" height="42" viewBox="0 0 28 42" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8080a"/><stop offset="100%" stop-color="#7a0000"/></linearGradient></defs><rect x="1" y="2" width="26" height="38" rx="3" fill="url(#ad)"/><rect x="1" y="2" width="26" height="9" rx="3" fill="#5a0000"/><rect x="1" y="31" width="26" height="9" rx="3" fill="#5a0000"/><polygon points="4,12 24,12 20,31 8,31" fill="#ff6500"/><polygon points="6,14 22,14 19,29 9,29" fill="#ffb200" opacity="0.8"/><text x="14" y="24" font-family="'Bebas Neue','Impact',sans-serif" font-size="7" fill="white" text-anchor="middle" letter-spacing="1" font-weight="900">DORITOS</text><text x="14" y="30" font-family="'Inter',sans-serif" font-size="3.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">NACHO CHEESE</text></svg>
+            </div>
+          </div>
+        </div>
+        <div class="stripe"></div>
+      </div>
+    </div>
+    <div class="feet"><div class="foot"></div><div class="foot"></div></div>
+    <div class="vm-shadow"></div>
+  </div>
+
+  <!-- OVERLAY: bag + note floating over machine -->
+  <div class="overlay" id="overlay">
+
+    <div class="ov-bag" id="ovBag" onclick="tearOpen()">
+      <!-- closed bag -->
+      <svg id="closedSvg" width="100" height="145" viewBox="0 0 100 145" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e8080a"/>
+            <stop offset="50%" stop-color="#c40000"/>
+            <stop offset="100%" stop-color="#7a0000"/>
+          </linearGradient>
+          <linearGradient id="shG" x1="0" y1="0" x2="0.45" y2="0">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.13)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <rect x="4" y="8" width="92" height="129" rx="7" fill="url(#bG)"/>
+        <rect x="4" y="8" width="92" height="26" rx="7" fill="#5a0000"/>
+        <rect x="4" y="111" width="92" height="26" rx="7" fill="#5a0000"/>
+        <line x1="4" y1="34" x2="96" y2="34" stroke="rgba(0,0,0,0.45)" stroke-width="1"/>
+        <line x1="4" y1="111" x2="96" y2="111" stroke="rgba(0,0,0,0.45)" stroke-width="1"/>
+        <polygon points="13,40 87,40 73,108 27,108" fill="#ff6500"/>
+        <polygon points="19,46 81,46 69,102 31,102" fill="#ffb200" opacity="0.78"/>
+        <text x="50" y="82" font-family="'Bebas Neue','Impact',sans-serif" font-size="20" fill="white" text-anchor="middle" font-weight="900" letter-spacing="2">DORITOS</text>
+        <text x="50" y="95" font-family="'Inter',sans-serif" font-size="9" fill="rgba(255,255,255,0.65)" text-anchor="middle" letter-spacing="1">NACHO CHEESE</text>
+        <text x="50" y="126" font-family="'Inter',sans-serif" font-size="7" fill="rgba(255,255,255,0.3)" text-anchor="middle">FLAVORED TORTILLA CHIPS</text>
+        <rect x="4" y="8" width="32" height="129" rx="7" fill="url(#shG)"/>
+        <rect x="88" y="31" width="8" height="5" rx="2.5" fill="rgba(255,255,255,0.18)"/>
+      </svg>
+      <!-- torn bag (hidden initially) -->
+      <svg id="tornSvg" width="100" height="145" viewBox="0 0 100 145" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+        <defs>
+          <linearGradient id="bG2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e8080a"/>
+            <stop offset="50%" stop-color="#c40000"/>
+            <stop offset="100%" stop-color="#7a0000"/>
+          </linearGradient>
+        </defs>
+        <rect x="4" y="8" width="92" height="129" rx="7" fill="url(#bG2)"/>
+        <rect x="4" y="111" width="92" height="26" rx="7" fill="#5a0000"/>
+        <polygon points="13,40 87,40 73,108 27,108" fill="#ff6500"/>
+        <polygon points="19,46 81,46 69,102 31,102" fill="#ffb200" opacity="0.78"/>
+        <text x="50" y="82" font-family="'Bebas Neue','Impact',sans-serif" font-size="20" fill="white" text-anchor="middle" font-weight="900" letter-spacing="2">DORITOS</text>
+        <text x="50" y="95" font-family="'Inter',sans-serif" font-size="9" fill="rgba(255,255,255,0.65)" text-anchor="middle" letter-spacing="1">NACHO CHEESE</text>
+        <!-- jagged tear across top -->
+        <polyline points="4,8 4,28 14,21 24,30 36,18 48,27 60,16 72,25 84,14 96,22 96,8" fill="#0a0a0a" stroke="#0a0a0a" stroke-width="1.5"/>
+        <polyline points="4,8 4,28 14,21 24,30 36,18 48,27 60,16 72,25 84,14 96,22 96,8" fill="none" stroke="#ffb200" stroke-width="1" opacity="0.6"/>
+      </svg>
+    </div>
+
+    <div class="ov-tear-hint" id="tearHint">tap to tear open</div>
+
+    <div class="note-card" id="noteCard">
+      <div class="note-eyebrow">a secret note, just for you</div>
+      <div class="note-msg" id="noteMsg">...</div>
+      <div class="note-from">— K 🧡</div>
+    </div>
+
+    <button class="again-btn" id="againBtn" onclick="reset()">insert another coin</button>
+  </div>
+
+</div>
+
+<script>
+const notes=[
+  "I choose you and us always.",
+  "You are the best boyfriend.",
+  "Snowy loves me more, sorry.\n\nP.S. I love you though.",
+  "You are the handsomest cutest boy in the world.",
+  "We lucked out.",
+  "I dream of you every night.",
+  "I might just share my pani puri with you.",
+  "I love you more every day."
+];
+
+let queue=[],coins=0,busy=false;
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function nextNote(){if(!queue.length)queue=shuffle(notes);return queue.shift();}
+function lcd(t){document.getElementById('lcd').textContent=t;}
+
+/* ── WEB AUDIO ── */
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+
+function coinSound(){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type='sine';o.frequency.setValueAtTime(1200,AC.currentTime);
+  o.frequency.exponentialRampToValueAtTime(800,AC.currentTime+0.08);
+  g.gain.setValueAtTime(0.25,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.18);
+  o.start();o.stop(AC.currentTime+0.18);
+}
+
+function mechanicalSound(){
+  const buf=AC.createBuffer(1,AC.sampleRate*0.3,AC.sampleRate);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(AC.sampleRate*0.08));
+  const s=AC.createBufferSource(),g=AC.createGain();
+  s.buffer=buf;s.connect(g);g.connect(AC.destination);
+  g.gain.setValueAtTime(0.18,AC.currentTime);
+  s.start();
+}
+
+function dropSound(){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type='triangle';
+  o.frequency.setValueAtTime(300,AC.currentTime);
+  o.frequency.exponentialRampToValueAtTime(80,AC.currentTime+0.15);
+  g.gain.setValueAtTime(0.2,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.2);
+  o.start();o.stop(AC.currentTime+0.2);
+}
+
+function tearSound(){
+  const dur=0.4;
+  const buf=AC.createBuffer(1,AC.sampleRate*dur,AC.sampleRate);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<d.length;i++){
+    const t=i/AC.sampleRate;
+    const env=Math.exp(-t*8)*(1+0.5*Math.sin(t*80));
+    d[i]=(Math.random()*2-1)*env*0.6;
+  }
+  const s=AC.createBufferSource(),g=AC.createGain();
+  s.buffer=buf;s.connect(g);g.connect(AC.destination);
+  g.gain.setValueAtTime(0.5,AC.currentTime);
+  g.gain.linearRampToValueAtTime(0,AC.currentTime+dur);
+  s.start();
+}
+
+function heartSound(){
+  [0,0.18].forEach(delay=>{
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.connect(g);g.connect(AC.destination);
+    o.type='sine';o.frequency.setValueAtTime(180,AC.currentTime+delay);
+    o.frequency.exponentialRampToValueAtTime(120,AC.currentTime+delay+0.12);
+    g.gain.setValueAtTime(0,AC.currentTime+delay);
+    g.gain.linearRampToValueAtTime(0.15,AC.currentTime+delay+0.03);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+delay+0.18);
+    o.start(AC.currentTime+delay);o.stop(AC.currentTime+delay+0.2);
+  });
+}
+
+/* ── PARTICLES ── */
+function burst(x,y){
+  const colors=['#ff6500','#ffb200','#e8080a','#ff4444','#fff'];
+  const scene=document.getElementById('scene');
+  for(let i=0;i<18;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    const angle=Math.random()*Math.PI*2;
+    const dist=40+Math.random()*60;
+    p.style.cssText=`left:${x}px;top:${y}px;background:${colors[i%colors.length]};--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;animation-duration:${0.5+Math.random()*0.3}s;`;
+    scene.appendChild(p);
+    setTimeout(()=>p.remove(),900);
+  }
+}
+
+/* ── MAIN FLOW ── */
+function insertCoin(){
+  if(busy)return;
+  AC.resume();
+  busy=true;
+  document.getElementById('ibtn').disabled=true;
+
+  coinSound();
+  const cz=document.getElementById('cz');
+  cz.classList.remove('go');void cz.offsetWidth;cz.classList.add('go');
+
+  coins++;
+  document.getElementById('cc').textContent=coins+' coin'+(coins===1?'':'s')+' used';
+  lcd('Processing...');
+
+  setTimeout(()=>{lcd('Dispensing...');mechanicalSound();},450);
+
+  const si=(coins-1)%6;
+  setTimeout(()=>{
+    const s=document.getElementById('s'+si);
+    s.classList.add('shake');
+    setTimeout(()=>s.classList.remove('shake'),600);
+  },480);
+
+  setTimeout(()=>{
+    document.getElementById('trayHint').style.opacity='0';
+    const db=document.getElementById('dropBag');
+    db.classList.remove('fall');void db.offsetWidth;
+    setTimeout(()=>{db.classList.add('fall');dropSound();},20);
+    lcd('Collect from tray \u2193');
+  },920);
+
+  setTimeout(()=>{
+    lcd('Enjoy a bite of love \u2665');
+    const ov=document.getElementById('overlay');
+    ov.classList.add('active');
+    setTimeout(()=>document.getElementById('ovBag').classList.add('show'),60);
+    setTimeout(()=>document.getElementById('tearHint').style.opacity='1',300);
+  },1700);
+}
+
+function tearOpen(){
+  const bag=document.getElementById('ovBag');
+  if(bag.dataset.torn==='1')return;
+  bag.dataset.torn='1';
+  bag.style.cursor='default';
+
+  AC.resume();
+  tearSound();
+  bag.classList.add('tearing');
+
+  const rect=bag.getBoundingClientRect();
+  const sceneRect=document.getElementById('scene').getBoundingClientRect();
+  burst(rect.left-sceneRect.left+rect.width/2, rect.top-sceneRect.top+rect.height/3);
+
+  setTimeout(()=>{
+    bag.classList.remove('tearing');
+    document.getElementById('closedSvg').style.display='none';
+    document.getElementById('tornSvg').style.display='block';
+    document.getElementById('tearHint').style.display='none';
+
+    const n=nextNote();
+    document.getElementById('noteMsg').textContent=n;
+
+    setTimeout(()=>{
+      heartSound();
+      document.getElementById('noteCard').classList.add('show');
+    },200);
+    setTimeout(()=>document.getElementById('againBtn').classList.add('show'),500);
+  },380);
+}
+
+function reset(){
+  const ov=document.getElementById('overlay');
+  ov.classList.remove('active');
+
+  const bag=document.getElementById('ovBag');
+  bag.classList.remove('show');
+  bag.dataset.torn='';
+  bag.style.cursor='pointer';
+  bag.classList.remove('tearing');
+  document.getElementById('closedSvg').style.display='block';
+  document.getElementById('tornSvg').style.display='none';
+  document.getElementById('tearHint').style.opacity='0';
+  document.getElementById('tearHint').style.display='';
+  document.getElementById('noteCard').classList.remove('show');
+  document.getElementById('againBtn').classList.remove('show');
+
+  document.getElementById('dropBag').classList.remove('fall');
+  document.getElementById('trayHint').style.opacity='';
+  lcd('Enjoy a bite of love \u2665');
+  document.getElementById('ibtn').disabled=false;
+  busy=false;
+}
+</script>
